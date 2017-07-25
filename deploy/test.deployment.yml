@@ -1,0 +1,31 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: utility
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: utility
+    spec:
+      volumes:
+      - name: static-volume
+        emptyDir: {}
+      containers:
+      - name: utility
+        image: lvejm/utility
+        imagePullPolicy: Always
+        command: ["yes"]
+        volumeMounts:
+        - name: static-volume
+          mountPath: /www
+        resources:
+          limits:
+            cpu: 30m
+            memory: 128Mi
+        env:
+        - name: K8S_POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
